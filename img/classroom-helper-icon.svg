@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img" aria-label="才藝教室小幫手圖示：行事曆與打勾">
+  <title>才藝教室小幫手</title>
+  <rect width="256" height="256" rx="56" fill="#1f3d34"/>
+  <rect x="44" y="58" width="168" height="154" rx="22" fill="#eef4ef"/>
+  <rect x="44" y="58" width="168" height="42" rx="22" fill="#9b2f40"/>
+  <rect x="44" y="80" width="168" height="20" fill="#9b2f40"/>
+  <rect x="82" y="40" width="14" height="38" rx="7" fill="#eef4ef"/>
+  <rect x="160" y="40" width="14" height="38" rx="7" fill="#eef4ef"/>
+  <g fill="#cfdcd3">
+    <rect x="64" y="116" width="24" height="18" rx="5"/>
+    <rect x="116" y="116" width="24" height="18" rx="5"/>
+    <rect x="168" y="116" width="24" height="18" rx="5"/>
+    <rect x="64" y="150" width="24" height="18" rx="5"/>
+    <rect x="168" y="150" width="24" height="18" rx="5"/>
+    <rect x="64" y="184" width="24" height="14" rx="5"/>
+    <rect x="116" y="184" width="24" height="14" rx="5"/>
+  </g>
+  <path d="M112 160 l12 12 l26 -30" fill="none" stroke="#1f3d34" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
