@@ -116,6 +116,7 @@ details p { margin-top: 8px; color: var(--muted); }
 
 .work { display: flex; gap: 18px; align-items: center; margin-top: 22px; background: var(--surface); border: 1px solid var(--line); border-radius: 12px; padding: 18px; flex-wrap: wrap; }
 .work img { width: 88px; height: 88px; border-radius: 20px; }
+.work:has(.work-video) { align-items: flex-start; }
 .work div { flex: 1 1 240px; min-width: 0; display: grid; gap: 4px; }
 .work-video { width: 100%; max-width: 240px; height: auto; aspect-ratio: 9 / 16; margin-top: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--line); }
 .work-note { font-size: .85rem; color: var(--muted); }
