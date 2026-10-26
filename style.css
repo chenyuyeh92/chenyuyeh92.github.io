@@ -120,6 +120,9 @@ details p { margin-top: 8px; color: var(--muted); }
 .work div { flex: 1 1 240px; min-width: 0; display: grid; gap: 4px; }
 .work-video { width: 100%; max-width: 240px; height: auto; aspect-ratio: 9 / 16; margin-top: 10px; border-radius: 12px; border: 1px solid var(--line); background: var(--line); }
 .work-note { font-size: .85rem; color: var(--muted); }
+/* 兩支影片(例如中文、英文)並排,太窄時上下排。 */
+.work .work-videos { display: flex; flex-wrap: wrap; gap: 12px; }
+.work .work-videos > div { flex: 0 1 240px; }
 
 .contact { background: var(--green); color: var(--on-green); }
 .contact .intro { color: var(--on-green); opacity: .85; }
