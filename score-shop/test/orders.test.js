@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { maskEmail, sendDownloadMail } from '../src/mail.js';
 import {
-  consumeDownload, createOrder, getOrder, markFailed, markPaid, newOrderNo, refundDownload,
+  consumeDownload, createOrder, getMailed, getOrder, markFailed, markPaid, newOrderNo, peekDownload, setMailed,
 } from '../src/orders.js';
 import { FakeKV, fakeFetch } from './fakes.js';
 
@@ -22,8 +22,8 @@ describe('orders', () => {
     const kv = new FakeKV();
     const o = await createOrder(kv, { item: 'sabzeruz', email: 'a@b.co', amount: 120 });
     expect((await getOrder(kv, o.no)).status).toBe('pending');
-    const first = await markPaid(kv, o.no);
-    const again = await markPaid(kv, o.no);
+    const first = await markPaid(kv, o.no, 'secret');
+    const again = await markPaid(kv, o.no, 'secret');
     expect(first.firstTime).toBe(true);
     expect(again.firstTime).toBe(false);
     expect(again.token).toBe(first.token);
@@ -39,24 +39,47 @@ describe('orders', () => {
     expect((await getOrder(kv, o.no)).status).toBe('failed');
   });
 
-  it('下載：最多 5 次、7 天、退回次數', async () => {
+  it('下載代碼由訂單編號算出來，同一筆訂單永遠一樣', async () => {
+    const kv1 = new FakeKV();
+    const kv2 = new FakeKV();
+    const o = await createOrder(kv1, { item: 'sabzeruz', email: 'a@b.co', amount: 120 });
+    await kv2.put(`order:${o.no}`, JSON.stringify(o));
+    expect((await markPaid(kv1, o.no, 'secret')).token).toBe((await markPaid(kv2, o.no, 'secret')).token);
+    const kv3 = new FakeKV();
+    await kv3.put(`order:${o.no}`, JSON.stringify(o));
+    expect((await markPaid(kv1, o.no, 'secret')).token).not.toBe((await markPaid(kv3, o.no, 'other')).token);
+  });
+
+  it('寄信紀錄另外存，不改訂單', async () => {
     const kv = new FakeKV();
     const o = await createOrder(kv, { item: 'sabzeruz', email: 'a@b.co', amount: 120 });
-    const { token } = await markPaid(kv, o.no);
+    expect(await getMailed(kv, o.no)).toBe(null);
+    await setMailed(kv, o.no, false);
+    expect(await getMailed(kv, o.no)).toBe(false);
+    await setMailed(kv, o.no, true);
+    expect(await getMailed(kv, o.no)).toBe(true);
+    expect(kv.writes.filter((k) => k === `order:${o.no}`).length).toBe(1);
+  });
+
+  it('下載：最多 5 次、7 天、查看不扣次數', async () => {
+    const kv = new FakeKV();
+    const o = await createOrder(kv, { item: 'sabzeruz', email: 'a@b.co', amount: 120 });
+    const { token } = await markPaid(kv, o.no, 'secret');
     const now = Date.now();
+    const peek = await peekDownload(kv, token, now);
+    expect(peek).toMatchObject({ ok: true, remaining: 5 });
+    expect(peek.order.no).toBe(o.no);
+    expect((await peekDownload(kv, token, now)).remaining).toBe(5);
     for (let i = 0; i < 5; i++) expect((await consumeDownload(kv, token, now)).ok).toBe(true);
     expect(await consumeDownload(kv, token, now)).toEqual({ ok: false, reason: 'used' });
-    await refundDownload(kv, token);
-    const r = await consumeDownload(kv, token, now);
-    expect(r.ok).toBe(true);
-    expect(r.order.no).toBe(o.no);
+    expect((await peekDownload(kv, token, now)).reason).toBe('used');
     expect(await consumeDownload(kv, 'xxx', now)).toEqual({ ok: false, reason: 'missing' });
   });
 
   it('下載：超過 7 天過期', async () => {
     const kv = new FakeKV();
     const o = await createOrder(kv, { item: 'sabzeruz', email: 'a@b.co', amount: 120 });
-    const { token } = await markPaid(kv, o.no);
+    const { token } = await markPaid(kv, o.no, 'secret');
     expect((await consumeDownload(kv, token, Date.now() + 7 * DAY - 60000)).ok).toBe(true);
     expect(await consumeDownload(kv, token, Date.now() + 7 * DAY + 60000)).toEqual({ ok: false, reason: 'expired' });
   });

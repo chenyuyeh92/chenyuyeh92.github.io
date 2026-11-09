@@ -73,15 +73,15 @@ ${inputs}
 <script>document.getElementById('pay').submit()</script>`);
 }
 
-export function paidPage({ order, item, maskedEmail, site }) {
+export function paidPage({ order, item, mailed, maskedEmail, site }) {
   return layout('付款成功', `<div class="card">
 <h1>付款成功，謝謝你！</h1>
 <p class="sub">${e(item.title)}・NT$${order.amount}・訂單編號 ${e(order.no)}</p>
-<a class="btn" href="/dl/${e(order.token)}">下載樂譜（PDF）</a>
+<a class="btn" href="/dl/${e(order.token)}?go=1">下載樂譜（PDF）</a>
 <ul class="hint">
-${order.mailed === false
+${mailed === false
     ? `<li><b>email 沒有寄出去</b>，請直接按上面的按鈕下載，並把這一頁加入書籤。需要的話請寫信給我，附上訂單編號。</li>`
-    : `<li>下載連結也寄到了 ${e(maskedEmail)}，沒看到的話請找找垃圾郵件。</li>`}
+    : `<li>下載連結${mailed ? '也寄到了' : '也會寄到'} ${e(maskedEmail)}，沒看到的話請找找垃圾郵件。</li>`}
 <li>連結 ${DOWNLOAD_DAYS} 天內有效，最多下載 ${DOWNLOAD_TIMES} 次，下載後請存在自己的電腦或手機裡。</li>
 <li>可以把這一頁加入書籤，之後再回來下載。</li>
 </ul></div>${backLink(site)}`);
@@ -108,4 +108,15 @@ export function failedPage({ order, item, site }) {
 
 export function messagePage({ title, message, site }) {
   return layout(title, `<div class="card"><h1>${e(title)}</h1><p>${message}</p></div>${backLink(site)}`);
+}
+
+export function downloadPage({ token, item, order, remaining, site }) {
+  return layout('下載樂譜', `<div class="card">
+<h1>${e(item.title)}</h1>
+<p class="sub">訂單編號 ${e(order?.no)}・還可以下載 ${remaining} 次</p>
+<a class="btn" href="/dl/${e(token)}?go=1">下載樂譜（PDF）</a>
+<ul class="hint">
+<li>如果是在 LINE、Instagram、Facebook 裡打開這一頁，下載常常會失敗：請按右上角選單，選「用瀏覽器開啟」（Safari 或 Chrome）再下載。</li>
+<li>下載後請存在自己的電腦或手機裡。</li>
+</ul></div>${`<a class="back" href="${e(site)}">← 回樂譜專區</a>`}`);
 }

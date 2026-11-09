@@ -154,6 +154,13 @@ describe('綠界付款通知', () => {
     expect(html).toContain('/buy?item=love-like-you');
   });
 
+  it('ECPAY_ENV 打錯字時也不接受模擬付款', async () => {
+    env.ECPAY_ENV = 'production';
+    const { no } = await checkout();
+    await ecpayPost('/ecpay/notify', no, 100, { SimulatePaid: '1' });
+    expect((await getOrder(env.ORDERS, no)).status).toBe('pending');
+  });
+
   it('正式環境不接受綠界後台的模擬付款', async () => {
     env.ECPAY_ENV = 'prod';
     const { no } = await checkout();
@@ -170,8 +177,31 @@ describe('付款後回到商店', () => {
     expect(res.status).toBe(303);
     expect(res.headers.get('location')).toBe(`${ORIGIN}/order/${no}`);
     expect((await getOrder(env.ORDERS, no)).status).toBe('paid');
+    expect(mail.calls.length).toBe(0);              // 寄信只由綠界伺服器通知負責
     await ecpayPost('/ecpay/notify', no, 100);
     expect(mail.calls.length).toBe(1);
+  });
+
+  it('通知和買家回來同時到：只寄一封信、只有一組下載代碼', async () => {
+    env.ORDERS = new FakeKV(5);
+    const { no } = await checkout();
+    await Promise.all([ecpayPost('/ecpay/notify', no, 100), ecpayPost('/ecpay/return', no, 100)]);
+    expect(mail.calls.length).toBe(1);
+    const dlKeys = [...env.ORDERS.map.keys()].filter((k) => k.startsWith('dl:'));
+    expect(dlKeys.length).toBe(1);
+    expect(mail.calls[0].body.htmlContent).toContain(dlKeys[0].slice(3));
+  });
+
+  it('上次寄信失敗，綠界再通知時重寄', async () => {
+    vi.stubGlobal('fetch', fakeFetch(500));
+    const { no } = await checkout();
+    await ecpayPost('/ecpay/notify', no, 100);
+    const retry = fakeFetch(201);
+    vi.stubGlobal('fetch', retry);
+    await ecpayPost('/ecpay/notify', no, 100);
+    expect(retry.calls.length).toBe(1);
+    await ecpayPost('/ecpay/notify', no, 100);
+    expect(retry.calls.length).toBe(1);
   });
 
   it('簽章錯誤的回傳不會完成訂單，只轉到訂單頁', async () => {
@@ -201,7 +231,7 @@ describe('付款後回到商店', () => {
     const { token } = await getOrder(env.ORDERS, no);
     const html = await (await call(`/order/${no}`)).text();
     expect(html).toContain('付款成功');
-    expect(html).toContain(`href="/dl/${token}"`);
+    expect(html).toContain(`href="/dl/${token}?go=1"`);
     expect(html).toContain('b***@example.com');
     expect(html).not.toContain('buyer@example.com');
   });
@@ -222,6 +252,7 @@ describe('付款後回到商店', () => {
 });
 
 describe('下載', () => {
+  beforeEach(() => { env.ECPAY_ENV = 'prod'; });
   async function paidToken(item = 'love-like-you', amount = 100) {
     const { no } = await checkout(item);
     await ecpayPost('/ecpay/notify', no, amount);
@@ -230,7 +261,7 @@ describe('下載', () => {
 
   it('回傳 PDF，檔名用 UTF-8 編碼', async () => {
     const token = await paidToken('sabzeruz', 120);
-    const res = await call(`/dl/${token}`);
+    const res = await call(`/dl/${token}?go=1`);
     expect(res.status).toBe(200);
     expect(res.headers.get('content-type')).toBe('application/pdf');
     expect(res.headers.get('content-disposition')).toContain("filename*=UTF-8''Genshin%20Dance%20of%20Sabzeruz.pdf");
@@ -240,22 +271,51 @@ describe('下載', () => {
 
   it('第 6 次下載被拒', async () => {
     const token = await paidToken();
-    for (let i = 0; i < 5; i++) expect((await call(`/dl/${token}`)).status).toBe(200);
-    const res = await call(`/dl/${token}`);
+    for (let i = 0; i < 5; i++) expect((await call(`/dl/${token}?go=1`)).status).toBe(200);
+    const res = await call(`/dl/${token}?go=1`);
     expect(res.status).toBe(410);
     expect(await res.text()).toContain('已經下載 5 次');
   });
 
   it('亂打的代碼', async () => {
     expect((await call('/dl/abc')).status).toBe(404);
+    expect((await call('/dl/abc?go=1')).status).toBe(404);
+  });
+
+  it('信裡的連結先開說明頁、不扣次數（防 email 掃毒自動點開）', async () => {
+    const token = await paidToken();
+    for (let i = 0; i < 8; i++) {
+      const res = await call(`/dl/${token}`);
+      expect(res.status).toBe(200);
+      expect(res.headers.get('content-type')).toContain('text/html');
+      const html = await res.text();
+      expect(html).toContain(`href="/dl/${token}?go=1"`);
+      expect(html).toContain('還可以下載 5 次');
+      expect(html).toContain('LINE');
+    }
+    expect((await call(`/dl/${token}?go=1`)).status).toBe(200);
+  });
+
+  it('測試環境只給測試用 PDF，不給真的樂譜', async () => {
+    env.ECPAY_ENV = 'stage';
+    const token = await paidToken();
+    const res = await call(`/dl/${token}?go=1`);
+    expect(res.status).toBe(200);
+    expect(res.headers.get('content-type')).toBe('application/pdf');
+    const body = await res.text();
+    expect(body.startsWith('%PDF-1.4')).toBe(true);
+    expect(body).toContain('TEST FILE');
+    expect(body).not.toContain('%PDF-love');
   });
 
   it('R2 找不到檔案：錯誤頁、不扣次數', async () => {
     const token = await paidToken();
     env.SCORES = new FakeR2({});
-    expect((await call(`/dl/${token}`)).status).toBe(500);
+    const before = env.ORDERS.writes.length;
+    expect((await call(`/dl/${token}?go=1`)).status).toBe(500);
+    expect(env.ORDERS.writes.length).toBe(before);   // 沒有寫入，不扣次數
     env.SCORES = new FakeR2({ 'love-like-you.pdf': '%PDF-love' });
-    for (let i = 0; i < 5; i++) expect((await call(`/dl/${token}`)).status).toBe(200);
+    for (let i = 0; i < 5; i++) expect((await call(`/dl/${token}?go=1`)).status).toBe(200);
   });
 });
 

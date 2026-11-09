@@ -5,6 +5,10 @@
 
 > 所有金鑰（綠界、Brevo）都只貼進 Cloudflare，**不要**寫進任何檔案、也不要傳給別人。
 
+> **測試環境（`ECPAY_ENV = "stage"`）只會給「TEST FILE」假檔案，不會給真的樂譜。**
+> 因為綠界的測試金鑰是公開的，任何人都能假裝付款；所以在換成正式環境之前，買到的都是假檔案。
+> 也因此：**樂譜專區頁面（`sheet-music/`）要等第 7 步換成正式環境之後，才合併到網站上公開。**
+
 ---
 
 ## 0. 準備
@@ -86,7 +90,8 @@ npx wrangler deploy
 ```
 
 最後會顯示網址，像 `https://score-shop.你的帳號.workers.dev`。
-**把這個網址告訴我（或自己改）**：樂譜專區頁面 `sheet-music/index.html` 最上面的 `SHOP` 要換成這個網址。
+樂譜專區頁面 `sheet-music/index.html` 的購買按鈕預設連到 `https://score-shop.mozart-shop.workers.dev`（跟莫札特遊戲同一個帳號的網址）。
+**如果顯示的網址不一樣**，把 `sheet-music/index.html` 裡兩個購買按鈕的網址換掉（搜尋 `score-shop.mozart-shop.workers.dev`），`scripts/reissue.mjs` 最後一行也一樣。
 
 ## 6. 用測試環境試買一次
 
@@ -96,7 +101,7 @@ npx wrangler deploy
    - 有效期限：任何未來的月份年份
    - 背面三碼 `222`
    - 如果有簡訊驗證碼，照綠界畫面上的測試說明填寫
-3. 付款後應該會自動回到「付款成功」畫面，按「下載樂譜」能下載 PDF。
+3. 付款後應該會自動回到「付款成功」畫面，按「下載樂譜」能下載 PDF（測試環境下載到的是寫著「TEST FILE」的假檔案，這是正常的）。
 4. 檢查 email 有沒有收到下載信（也看看垃圾郵件）。
 5. 再試一次故意不勾同意、打錯 email，看提示是否正確。
 
@@ -117,7 +122,8 @@ npx wrangler deploy
    npx wrangler deploy
    ```
 
-4. 自己用真的卡買一份最便宜的確認一次（之後可以在綠界後台退刷）。
+4. 自己用真的卡買一份最便宜的確認一次，這次應該下載到真的樂譜（之後可以在綠界後台退刷）。
+5. 確認沒問題後，再把樂譜專區頁面合併到網站上公開。
 
 ---
 
@@ -128,6 +134,8 @@ npx wrangler deploy
    ```bash
    python3 tools/make-preview.py "新樂譜.pdf" 新曲子的英文代號
    ```
+
+   **每一張預覽圖都要自己打開看過**：前 4 行清楚、後面看不出音符。如果抓錯（例如譜線太淡），用 `--cut 頁:比例` 手動指定，例如 `--cut 1:0.62`。
 
 2. 上傳完整 PDF 到 R2：
 
@@ -147,6 +155,24 @@ npx wrangler deploy
    ```bash
    npx wrangler r2 object delete score-files/那首的檔名.pdf --remote
    ```
+
+## 買家說「沒收到信」「連結過期」「次數用完」
+
+1. 請買家告訴你付款用的 email 或訂單編號（`S` 開頭）。沒有訂單編號的話，到[綠界廠商後台](https://vendor.ecpay.com.tw/)的交易查詢，用時間或金額找到那筆交易，「特店訂單編號」就是訂單編號。
+2. 在 `score-shop` 資料夾執行（把訂單編號換掉）：
+
+   ```bash
+   npm run reissue -- S2611091230abcdefgh
+   ```
+
+   它會重新開放 7 天、5 次下載，並印出一個網址。
+3. 把那個網址寄給買家，打開就有「下載樂譜」按鈕。
+
+只想看訂單內容（email、付款狀態）：
+
+```bash
+npx wrangler kv key get "order:S2611091230abcdefgh" --binding ORDERS --remote
+```
 
 ## 查問題
 

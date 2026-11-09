@@ -4,7 +4,8 @@
   "type": "module",
   "scripts": {
     "test": "vitest run",
-    "deploy": "wrangler deploy"
+    "deploy": "wrangler deploy",
+    "reissue": "node scripts/reissue.mjs"
   },
   "devDependencies": {
     "vitest": "^5.1.0",

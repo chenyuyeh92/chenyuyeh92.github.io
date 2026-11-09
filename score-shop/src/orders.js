@@ -38,11 +38,18 @@ export async function getOrder(kv, no) {
   return kv.get(`order:${no}`, 'json');
 }
 
-export async function markPaid(kv, no) {
+// 下載代碼 = HMAC(secret, 訂單編號)：同一筆訂單不管被處理幾次、同時處理，代碼都一樣
+export async function downloadToken(no, secret) {
+  const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(secret),
+    { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  return base64url(new Uint8Array(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode(no))));
+}
+
+export async function markPaid(kv, no, secret) {
   const order = await getOrder(kv, no);
   if (!order) return null;
   if (order.status === 'paid' && order.token) return { order, token: order.token, firstTime: false };
-  const token = base64url(crypto.getRandomValues(new Uint8Array(32)));
+  const token = await downloadToken(no, secret);
   await kv.put(`dl:${token}`, JSON.stringify({
     no, expires: Date.now() + DOWNLOAD_DAYS * DAY, remaining: DOWNLOAD_TIMES,
   }));
@@ -59,25 +66,35 @@ export async function markFailed(kv, no) {
   return failed;
 }
 
-export async function consumeDownload(kv, token, now = Date.now()) {
+async function readDownload(kv, token, now) {
   const rec = typeof token === 'string' && token ? await kv.get(`dl:${token}`, 'json') : null;
   if (!rec) return { ok: false, reason: 'missing' };
   if (now > rec.expires) return { ok: false, reason: 'expired' };
   if (rec.remaining <= 0) return { ok: false, reason: 'used' };
-  await kv.put(`dl:${token}`, JSON.stringify({ ...rec, remaining: rec.remaining - 1 }));
-  const order = await getOrder(kv, rec.no);
-  return { ok: true, order, remaining: rec.remaining - 1 };
+  return { ok: true, rec };
 }
 
-export async function refundDownload(kv, token) {
-  const rec = await kv.get(`dl:${token}`, 'json');
-  if (!rec) return;
-  await kv.put(`dl:${token}`, JSON.stringify({ ...rec, remaining: Math.min(DOWNLOAD_TIMES, rec.remaining + 1) }));
+// 只查看，不扣次數
+export async function peekDownload(kv, token, now = Date.now()) {
+  const r = await readDownload(kv, token, now);
+  if (!r.ok) return r;
+  return { ok: true, remaining: r.rec.remaining, order: await getOrder(kv, r.rec.no) };
 }
 
-// 記錄下載信有沒有寄成功（付款成功頁依此調整說明）
+export async function consumeDownload(kv, token, now = Date.now()) {
+  const r = await readDownload(kv, token, now);
+  if (!r.ok) return r;
+  const remaining = r.rec.remaining - 1;
+  await kv.put(`dl:${token}`, JSON.stringify({ ...r.rec, remaining }));
+  return { ok: true, order: await getOrder(kv, r.rec.no), remaining };
+}
+
+// 下載信有沒有寄成功，另外存一個 key（避免短時間內重複寫同一筆訂單）
 export async function setMailed(kv, no, ok) {
-  const order = await getOrder(kv, no);
-  if (!order) return;
-  await kv.put(`order:${no}`, JSON.stringify({ ...order, mailed: ok }));
+  await kv.put(`mailed:${no}`, ok ? '1' : '0');
+}
+
+export async function getMailed(kv, no) {
+  const v = await kv.get(`mailed:${no}`);
+  return v === null ? null : v === '1';
 }
