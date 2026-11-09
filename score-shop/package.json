@@ -1,0 +1,13 @@
+{
+  "name": "score-shop",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest run",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "vitest": "^5.1.0",
+    "wrangler": "^4.158.0"
+  }
+}
