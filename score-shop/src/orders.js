@@ -74,3 +74,10 @@ export async function refundDownload(kv, token) {
   if (!rec) return;
   await kv.put(`dl:${token}`, JSON.stringify({ ...rec, remaining: Math.min(DOWNLOAD_TIMES, rec.remaining + 1) }));
 }
+
+// 記錄下載信有沒有寄成功（付款成功頁依此調整說明）
+export async function setMailed(kv, no, ok) {
+  const order = await getOrder(kv, no);
+  if (!order) return;
+  await kv.put(`order:${no}`, JSON.stringify({ ...order, mailed: ok }));
+}

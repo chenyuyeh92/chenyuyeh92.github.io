@@ -206,6 +206,16 @@ describe('付款後回到商店', () => {
     expect(html).not.toContain('buyer@example.com');
   });
 
+  it('寄信失敗時，付款成功頁不說「已寄出」，改提醒直接下載', async () => {
+    vi.stubGlobal('fetch', fakeFetch(500));
+    const { no } = await checkout();
+    await ecpayPost('/ecpay/notify', no, 100);
+    const html = await (await call(`/order/${no}`)).text();
+    expect(html).toContain('付款成功');
+    expect(html).not.toContain('下載連結也寄到了');
+    expect(html).toContain('email 沒有寄出去');
+  });
+
   it('訂單不存在', async () => {
     expect((await call('/order/Sxxxxxxxx')).status).toBe(404);
   });

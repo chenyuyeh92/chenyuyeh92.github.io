@@ -79,7 +79,9 @@ export function paidPage({ order, item, maskedEmail, site }) {
 <p class="sub">${e(item.title)}・NT$${order.amount}・訂單編號 ${e(order.no)}</p>
 <a class="btn" href="/dl/${e(order.token)}">下載樂譜（PDF）</a>
 <ul class="hint">
-<li>下載連結也寄到了 ${e(maskedEmail)}，沒看到的話請找找垃圾郵件。</li>
+${order.mailed === false
+    ? `<li><b>email 沒有寄出去</b>，請直接按上面的按鈕下載，並把這一頁加入書籤。需要的話請寫信給我，附上訂單編號。</li>`
+    : `<li>下載連結也寄到了 ${e(maskedEmail)}，沒看到的話請找找垃圾郵件。</li>`}
 <li>連結 ${DOWNLOAD_DAYS} 天內有效，最多下載 ${DOWNLOAD_TIMES} 次，下載後請存在自己的電腦或手機裡。</li>
 <li>可以把這一頁加入書籤，之後再回來下載。</li>
 </ul></div>${backLink(site)}`);

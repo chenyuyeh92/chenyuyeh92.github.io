@@ -5,7 +5,7 @@ import { buildCheckoutParams, checkMacValue, checkoutUrl, verifyMac } from './ec
 import { escapeHtml } from './html.js';
 import { maskEmail, sendDownloadMail } from './mail.js';
 import {
-  consumeDownload, createOrder, DOWNLOAD_TIMES, getOrder, markFailed, markPaid, refundDownload,
+  consumeDownload, createOrder, DOWNLOAD_TIMES, getOrder, markFailed, markPaid, refundDownload, setMailed,
 } from './orders.js';
 import {
   buyPage, failedPage, messagePage, paidPage, pendingPage, redirectToEcpay,
@@ -43,7 +43,8 @@ async function applyEcpayResult(env, origin, p) {
   const result = await markPaid(env.ORDERS, order.no);
   if (result.firstTime) {
     const item = getItem(order.item);
-    await sendDownloadMail(env, { order: result.order, item, link: `${origin}/dl/${result.token}` });
+    const ok = await sendDownloadMail(env, { order: result.order, item, link: `${origin}/dl/${result.token}` });
+    await setMailed(env.ORDERS, order.no, ok);
   }
   return 'paid';
 }
