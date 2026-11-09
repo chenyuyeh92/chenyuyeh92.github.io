@@ -6,7 +6,7 @@ compatibility_date = "2026-10-01"
 
 [vars]
 # 測試時用 "stage"（綠界測試環境），全部試過沒問題再改成 "prod"
-ECPAY_ENV = "stage"
+ECPAY_ENV = "prod"
 SITE_URL = "https://chenyuyeh92.github.io/sheet-music/"
 # 買家有問題時寫信的信箱
 CONTACT_EMAIL = "chenyouye493@gmail.com"
@@ -14,7 +14,7 @@ CONTACT_EMAIL = "chenyouye493@gmail.com"
 [[kv_namespaces]]
 binding = "ORDERS"
 # 執行 `npx wrangler kv namespace create ORDERS` 後，把它給的 id 貼在這裡
-id = "REPLACE_WITH_KV_ID"
+id = "83cab26a190d429993204f036c6a1f89"
 
 [[r2_buckets]]
 binding = "SCORES"
