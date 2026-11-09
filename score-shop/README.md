@@ -40,7 +40,6 @@ npx wrangler kv namespace create ORDERS
 
 畫面上會出現一段 `id = "一串英文數字"`。打開 `wrangler.toml`，把 `REPLACE_WITH_KV_ID` 換成那串英文數字。
 
-順便在 `wrangler.toml` 的 `CONTACT_EMAIL = ""` 填上你的聯絡 email（買家有問題時會看到）。
 
 ## 2. 建立放完整樂譜的地方（R2）並上傳 PDF
 

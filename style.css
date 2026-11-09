@@ -165,7 +165,7 @@ footer a { color: var(--muted); }
 .score-more { padding: 10px 14px; }
 .score-more img { margin-top: 10px; }
 .score-card audio { width: 100%; }
-.score-audio-soon { font-size: .9rem; color: var(--muted); }
+.score-audio-note { font-size: .82rem; color: var(--muted); margin-top: -4px; }
 .score-price { font-family: var(--latin); font-size: 1.5rem; font-weight: 700; }
 .score-card .btn { width: 100%; }
 .score-howto ul { margin-top: 8px; }

@@ -8,8 +8,8 @@ compatibility_date = "2026-10-01"
 # 測試時用 "stage"（綠界測試環境），全部試過沒問題再改成 "prod"
 ECPAY_ENV = "stage"
 SITE_URL = "https://chenyuyeh92.github.io/sheet-music/"
-# 買家有問題時寫信的信箱（部署前請填上你的 email）
-CONTACT_EMAIL = ""
+# 買家有問題時寫信的信箱
+CONTACT_EMAIL = "chenyouye493@gmail.com"
 
 [[kv_namespaces]]
 binding = "ORDERS"
