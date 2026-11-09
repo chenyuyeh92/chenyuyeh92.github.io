@@ -1,0 +1,5 @@
+# 完整樂譜 PDF 不放進公開的 GitHub
+*.pdf
+node_modules/
+.wrangler/
+__pycache__/
