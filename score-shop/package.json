@@ -5,7 +5,8 @@
   "scripts": {
     "test": "vitest run",
     "deploy": "wrangler deploy",
-    "reissue": "node scripts/reissue.mjs"
+    "reissue": "node scripts/reissue.mjs",
+    "setup": "node scripts/setup.mjs"
   },
   "devDependencies": {
     "vitest": "^5.1.0",
