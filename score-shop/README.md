@@ -147,8 +147,10 @@ npx wrangler deploy
 1. 產生預覽圖（在 `chenyuyeh92.github.io` 資料夾執行）：
 
    ```bash
-   python3 tools/make-preview.py "新樂譜.pdf" 新曲子的英文代號
+   python3 tools/make-preview.py "新樂譜.pdf" 新曲子的英文代號 --watermark "Marco Yeh"
    ```
+
+   （Windows 沒有 pdftoppm 時，先 `pip install pillow pymupdf`，工具會自動改用 PyMuPDF。）
 
    **每一張預覽圖都要自己打開看過**：前 4 行清楚、後面看不出音符。如果抓錯（例如譜線太淡），用 `--cut 頁:比例` 手動指定，例如 `--cut 1:0.62`。
 

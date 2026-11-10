@@ -14,6 +14,20 @@ export const CATALOG = {
     price: 120,
     file: 'sabzeruz.pdf',
   },
+  'fontaine-easy': {
+    id: 'fontaine-easy',
+    title: 'Genshin Fontaine Theme（簡單版）',
+    subtitle: '原神・鋼琴改編・簡單簡短版',
+    price: 100,
+    file: 'fontaine-easy.pdf',
+  },
+  'fontaine-medium': {
+    id: 'fontaine-medium',
+    title: 'Genshin Fontaine Theme（中等版）',
+    subtitle: '原神・鋼琴改編・中等版',
+    price: 150,
+    file: 'fontaine-medium.pdf',
+  },
 };
 
 export function getItem(id) {
