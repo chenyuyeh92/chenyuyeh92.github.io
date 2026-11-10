@@ -20,6 +20,7 @@
 | 部署說明 | `score-shop/README.md` | 完成 |
 
 商品：`love-like-you`「Love Like You」NT$100、`sabzeruz`「Genshin Dance of Sabzeruz」NT$120（價格以 `score-shop/src/catalog.js` 為準）。
+2026-11-10 新增：`fontaine-easy`「Genshin Fontaine Theme（簡單版）」NT$100、`fontaine-medium`「Genshin Fontaine Theme（中等版）」NT$150（PDF 已手動上傳 R2；`scripts/setup.mjs` 只會處理最早的兩首）。
 聯絡信箱：使用者指定 `chenyouye493@gmail.com`（已寫在 `score-shop/wrangler.toml` 的 `CONTACT_EMAIL`）。
 
 ## 還沒做的（接手後要做的）

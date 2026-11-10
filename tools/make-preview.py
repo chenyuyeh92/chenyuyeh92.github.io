@@ -6,7 +6,7 @@
   python3 tools/make-preview.py 樂譜.pdf love-like-you --keep 4 --out sheet-music/img
   python3 tools/make-preview.py 樂譜.pdf love-like-you --cut 1:0.62   # 自動抓錯時：第 1 頁 62% 高度以下打馬賽克
 
-需要：poppler（pdftoppm）、Pillow。
+需要：Pillow，以及 poppler（pdftoppm）或 PyMuPDF（pip install pymupdf）擇一。
 完整 PDF 不要放進 git（.gitignore 已排除 *.pdf）。
 """
 import argparse
