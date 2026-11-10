@@ -10,6 +10,7 @@
 完整 PDF 不要放進 git（.gitignore 已排除 *.pdf）。
 """
 import argparse
+import shutil
 import subprocess
 import sys
 import tempfile
@@ -160,9 +161,10 @@ def _font(size):
     return ImageFont.load_default(), "Preview"
 
 
-def add_watermark(img):
+def add_watermark(img, text=None):
     w, h = img.size
-    font, text = _font(w // 12)
+    font, default_text = _font(w // 12)
+    text = text or default_text
     layer = Image.new("RGBA", (w, w // 6), (0, 0, 0, 0))
     ImageDraw.Draw(layer).text((w // 2, w // 12), text, font=font, anchor="mm",
                                fill=(120, 120, 120, 64))
@@ -174,6 +176,11 @@ def add_watermark(img):
 
 
 def render_pdf(pdf):
+    if not shutil.which("pdftoppm"):          # Windows 沒有 poppler 時改用 PyMuPDF（pip install pymupdf）
+        import pymupdf
+        doc = pymupdf.open(str(pdf))
+        return [Image.frombytes("RGB", (p.width, p.height), p.samples)
+                for p in (pg.get_pixmap(dpi=DPI) for pg in doc)]
     with tempfile.TemporaryDirectory() as tmp:
         subprocess.run(["pdftoppm", "-r", str(DPI), "-png", str(pdf), f"{tmp}/p"], check=True)
         files = sorted(Path(tmp).glob("p-*.png"), key=lambda p: int(p.stem.split("-")[-1]))
@@ -187,6 +194,7 @@ def main(argv=None):
     ap.add_argument("--keep", type=int, default=4, help="保留幾行清楚（預設 4）")
     ap.add_argument("--out", default="sheet-music/img")
     ap.add_argument("--cut", help="手動指定馬賽克起點，格式 頁:比例，例如 1:0.62")
+    ap.add_argument("--watermark", help="浮水印文字，例如 \"Marco Yeh\"（預設「試看 Preview」）")
     args = ap.parse_args(argv)
 
     cut = None
@@ -203,7 +211,7 @@ def main(argv=None):
     out = Path(args.out)
     out.mkdir(parents=True, exist_ok=True)
     for n, pg in enumerate(apply_preview(pages, args.keep, cut), start=1):
-        pg = add_watermark(pg)
+        pg = add_watermark(pg, args.watermark)
         pg = pg.resize((OUT_WIDTH, round(pg.size[1] * OUT_WIDTH / pg.size[0])), Image.LANCZOS)
         path = out / f"{args.name}-{n}.webp"
         pg.save(path, "WEBP", quality=80)
