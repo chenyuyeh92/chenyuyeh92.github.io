@@ -35,6 +35,13 @@ export const CATALOG = {
     price: 150,
     file: 'fontaine-duet.pdf',
   },
+  'my-dearest': {
+    id: 'my-dearest',
+    title: 'My Dearest',
+    subtitle: '罪惡王冠 Guilty Crown OP1・鋼琴改編',
+    price: 120,
+    file: 'my-dearest.pdf',
+  },
 };
 
 export function getItem(id) {
