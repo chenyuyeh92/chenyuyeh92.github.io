@@ -28,6 +28,13 @@ export const CATALOG = {
     price: 150,
     file: 'fontaine-medium.pdf',
   },
+  'fontaine-duet': {
+    id: 'fontaine-duet',
+    title: 'Genshin Fontaine Theme（四手聯彈）',
+    subtitle: '原神・鋼琴四手聯彈',
+    price: 150,
+    file: 'fontaine-duet.pdf',
+  },
 };
 
 export function getItem(id) {
