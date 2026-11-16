@@ -4,3 +4,5 @@ node_modules/
 .wrangler/
 __pycache__/
 .dev.vars
+# 免費樂譜例外：要公開下載
+!sheet-music/free/*.pdf
