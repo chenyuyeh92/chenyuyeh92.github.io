@@ -9,6 +9,7 @@ describe('catalog', () => {
     expect(getItem('fontaine-medium').price).toBe(150);
     expect(getItem('fontaine-duet').price).toBe(150);
     expect(getItem('my-dearest').price).toBe(120);
+    expect(getItem('jinsei-yume-darake').price).toBe(100);
   });
   it('不存在的商品回傳 null', () => {
     expect(getItem('nope')).toBeNull();

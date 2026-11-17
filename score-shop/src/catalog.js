@@ -42,6 +42,13 @@ export const CATALOG = {
     price: 120,
     file: 'my-dearest.pdf',
   },
+  'jinsei-yume-darake': {
+    id: 'jinsei-yume-darake',
+    title: '人生は夢だらけ',
+    subtitle: '椎名林檎・鋼琴改編',
+    price: 100,
+    file: 'jinsei-yume-darake.pdf',
+  },
 };
 
 export function getItem(id) {
