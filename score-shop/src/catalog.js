@@ -56,6 +56,13 @@ export const CATALOG = {
     price: 80,
     file: 'we-are-number-one.pdf',
   },
+  'wish-upon-a-star': {
+    id: 'wish-upon-a-star',
+    title: 'When You Wish Upon a Star',
+    subtitle: '木偶奇遇記 Pinocchio・爵士鋼琴改編',
+    price: 120,
+    file: 'wish-upon-a-star.pdf',
+  },
 };
 
 export function getItem(id) {

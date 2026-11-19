@@ -68,3 +68,7 @@ python3 -m pytest -q tools/test_make_preview.py
 ## 2026-11-19（四）新增〈We Are Number One〉
 - id `we-are-number-one`，NT$80（負責人 2026-11-19 確認），1 頁，試聽 47 秒
 - 只有 1 頁，所以只給看前 2 行（`--cut 1:0.398`）；網頁說明的「前 4 行」改成「前幾行」
+
+## 2026-11-20（五）新增〈When You Wish Upon a Star〉
+- id `wish-upon-a-star`，NT$120（負責人指定），2 頁，爵士風改編，試聽 1 分 37 秒
+- 預覽 `--cut 1:0.803`（0.785 會切到第 4 行低音譜的加線）
