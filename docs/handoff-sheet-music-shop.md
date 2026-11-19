@@ -64,3 +64,7 @@ python3 -m pytest -q tools/test_make_preview.py
 - id `jinsei-yume-darake`，NT$100，5 頁，作曲椎名林檎、改編 Marco Yeh；試聽音檔 4 分 00 秒
 - 預覽 `--cut 1:0.77`（第 1 頁前 4 行清楚，自動偵測只抓到 3 行，不可信）
 - R2 已上傳並核對 sha1 一致（384c9c76…），Worker 已部署
+
+## 2026-11-19（四）新增〈We Are Number One〉
+- id `we-are-number-one`，NT$80（負責人 2026-11-19 確認），1 頁，試聽 47 秒
+- 只有 1 頁，所以只給看前 2 行（`--cut 1:0.398`）；網頁說明的「前 4 行」改成「前幾行」

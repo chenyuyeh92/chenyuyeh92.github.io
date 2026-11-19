@@ -49,6 +49,13 @@ export const CATALOG = {
     price: 100,
     file: 'jinsei-yume-darake.pdf',
   },
+  'we-are-number-one': {
+    id: 'we-are-number-one',
+    title: 'We Are Number One',
+    subtitle: 'LazyTown・鋼琴改編',
+    price: 80,
+    file: 'we-are-number-one.pdf',
+  },
 };
 
 export function getItem(id) {
