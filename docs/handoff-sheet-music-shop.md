@@ -66,5 +66,5 @@ python3 -m pytest -q tools/test_make_preview.py
 - R2 已上傳並核對 sha1 一致（384c9c76…），Worker 已部署
 
 ## 2026-11-19（四）新增〈We Are Number One〉
-- id `we-are-number-one`，NT$80（暫定，負責人沒指定價格），1 頁，試聽 47 秒
+- id `we-are-number-one`，NT$80（負責人 2026-11-19 確認），1 頁，試聽 47 秒
 - 只有 1 頁，所以只給看前 2 行（`--cut 1:0.398`）；網頁說明的「前 4 行」改成「前幾行」
