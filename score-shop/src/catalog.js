@@ -58,10 +58,24 @@ export const CATALOG = {
   },
   'wish-upon-a-star': {
     id: 'wish-upon-a-star',
-    title: 'When You Wish Upon a Star',
+    title: 'When You Wish Upon a Star（爵士版）',
     subtitle: '木偶奇遇記 Pinocchio・爵士鋼琴改編',
     price: 120,
     file: 'wish-upon-a-star.pdf',
+  },
+  'wish-easy-staff': {
+    id: 'wish-easy-staff',
+    title: 'When You Wish Upon a Star（簡易版・五線譜）',
+    subtitle: '木偶奇遇記 Pinocchio・鋼琴簡易版',
+    price: 80,
+    file: 'wish-easy-staff.pdf',
+  },
+  'wish-easy-jianpu': {
+    id: 'wish-easy-jianpu',
+    title: 'When You Wish Upon a Star（簡易版・簡譜）',
+    subtitle: '木偶奇遇記 Pinocchio・鋼琴簡易版・數字簡譜',
+    price: 80,
+    file: 'wish-easy-jianpu.pdf',
   },
 };
 

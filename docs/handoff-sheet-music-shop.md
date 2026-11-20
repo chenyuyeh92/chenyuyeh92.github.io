@@ -72,3 +72,8 @@ python3 -m pytest -q tools/test_make_preview.py
 ## 2026-11-20（五）新增〈When You Wish Upon a Star〉
 - id `wish-upon-a-star`，NT$120（負責人指定），2 頁，爵士風改編，試聽 1 分 37 秒
 - 預覽 `--cut 1:0.803`（0.785 會切到第 4 行低音譜的加線）
+
+## 2026-11-20（五）新增〈When You Wish Upon a Star〉簡易版兩份
+- `wish-easy-staff`（五線譜）、`wish-easy-jianpu`（簡譜），各 NT$80（負責人指定），各 2 頁，初級
+- 兩張卡片共用音檔 `audio/wish-easy.mp3`（1 分 37 秒）
+- 預覽 `--cut 1:0.68`（五線譜）、`--cut 1:0.69`（簡譜）
