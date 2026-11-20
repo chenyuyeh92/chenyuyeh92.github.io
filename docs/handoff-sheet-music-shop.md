@@ -77,3 +77,7 @@ python3 -m pytest -q tools/test_make_preview.py
 - `wish-easy-staff`（五線譜）、`wish-easy-jianpu`（簡譜），各 NT$80（負責人指定），各 2 頁，初級
 - 兩張卡片共用音檔 `audio/wish-easy.mp3`（1 分 37 秒）
 - 預覽 `--cut 1:0.68`（五線譜）、`--cut 1:0.69`（簡譜）
+
+## 2026-11-21（六）新增〈童年〉簡易版簡譜
+- id `tong-nian`，NT$80（負責人指定），1 頁，初級，羅大佑作曲，試聽 1 分 45 秒
+- 只有 1 頁，所以只給看前 2 行（`--cut 1:0.425`）

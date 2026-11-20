@@ -77,6 +77,13 @@ export const CATALOG = {
     price: 80,
     file: 'wish-easy-jianpu.pdf',
   },
+  'tong-nian': {
+    id: 'tong-nian',
+    title: '童年（簡易版・簡譜）',
+    subtitle: '羅大佑・鋼琴簡易版・數字簡譜',
+    price: 80,
+    file: 'tong-nian.pdf',
+  },
 };
 
 export function getItem(id) {
