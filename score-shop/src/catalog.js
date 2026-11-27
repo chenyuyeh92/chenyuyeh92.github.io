@@ -84,6 +84,13 @@ export const CATALOG = {
     price: 80,
     file: 'tong-nian.pdf',
   },
+  'white-christmas': {
+    id: 'white-christmas',
+    title: 'White Christmas',
+    subtitle: 'Irving Berlin・聖誕爵士鋼琴改編',
+    price: 80,
+    file: 'white-christmas.pdf',
+  },
 };
 
 export function getItem(id) {
