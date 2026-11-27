@@ -81,3 +81,8 @@ python3 -m pytest -q tools/test_make_preview.py
 ## 2026-11-21（六）新增〈童年〉簡易版簡譜
 - id `tong-nian`，NT$80（負責人指定），1 頁，初級，羅大佑作曲，試聽 1 分 45 秒
 - 只有 1 頁，所以只給看前 2 行（`--cut 1:0.425`）
+
+## 2026-11-27（五）新增〈Deck the Halls〉兩份免費樂譜
+- `sheet-music/free/deck-the-halls-duet.pdf`（師生合奏：第 1 頁四行總譜、第 2 頁學生分譜）、`deck-the-halls-easy.pdf`（簡易版 1 頁）
+- 音檔各一：duet 45 秒、easy 44 秒（兩個檔名都是亂碼，用低頻音量判斷：合奏版低音多約 10 dB）
+- 預覽 `--cut 99:0`（免費不打馬賽克），有 Marco Yeh 浮水印；免費曲不進 catalog.js、不用部署 Worker
