@@ -86,3 +86,7 @@ python3 -m pytest -q tools/test_make_preview.py
 - `sheet-music/free/deck-the-halls-duet.pdf`（師生合奏：第 1 頁四行總譜、第 2 頁學生分譜）、`deck-the-halls-easy.pdf`（簡易版 1 頁）
 - 音檔各一：duet 45 秒、easy 44 秒（兩個檔名都是亂碼，用低頻音量判斷：合奏版低音多約 10 dB）
 - 預覽 `--cut 99:0`（免費不打馬賽克），有 Marco Yeh 浮水印；免費曲不進 catalog.js、不用部署 Worker
+
+## 2026-11-27（五）新增〈White Christmas〉聖誕爵士版
+- id `white-christmas`，NT$80（負責人指定），2 頁，中級（Slow Ballad 爵士和聲），Irving Berlin 作曲，試聽 2 分 12 秒
+- 預覽 `--cut 1:0.772`（第 1 頁共 5 行，露前 4 行）
