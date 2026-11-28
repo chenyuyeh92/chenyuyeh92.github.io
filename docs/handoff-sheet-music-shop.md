@@ -90,3 +90,8 @@ python3 -m pytest -q tools/test_make_preview.py
 ## 2026-11-27（五）新增〈White Christmas〉聖誕爵士版
 - id `white-christmas`，NT$80（負責人指定），2 頁，中級（Slow Ballad 爵士和聲），Irving Berlin 作曲，試聽 2 分 12 秒
 - 預覽 `--cut 1:0.772`（第 1 頁共 5 行，露前 4 行）
+
+## 2026-11-28（六）新增〈Can't Help Falling in Love〉兩個版本
+- `cant-help-simple`（簡樸版・簡譜，2 頁，初級）NT$80；`cant-help-medium`（中等華麗版・五線譜，3 頁，中級）NT$100（負責人指定）
+- 音檔各一：simple 1 分 57 秒（上傳檔名 `Cant_Help_Falling_in_Love____.mp3`）、medium 2 分 31 秒（用頁數／長度對應，尚待負責人用耳朵確認）
+- 預覽 `--cut 1:0.812`（simple）、`--cut 1:0.79`（medium），都是露前 4 行
