@@ -16,6 +16,8 @@ describe('catalog', () => {
     expect(getItem('wish-easy-jianpu').price).toBe(80);
     expect(getItem('tong-nian').price).toBe(80);
     expect(getItem('white-christmas').price).toBe(80);
+    expect(getItem('cant-help-simple').price).toBe(80);
+    expect(getItem('cant-help-medium').price).toBe(100);
   });
   it('不存在的商品回傳 null', () => {
     expect(getItem('nope')).toBeNull();

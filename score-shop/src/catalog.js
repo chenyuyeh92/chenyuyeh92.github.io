@@ -91,6 +91,20 @@ export const CATALOG = {
     price: 80,
     file: 'white-christmas.pdf',
   },
+  'cant-help-simple': {
+    id: 'cant-help-simple',
+    title: "Can't Help Falling in Love（簡樸版・簡譜）",
+    subtitle: '貓王 Elvis Presley・鋼琴簡易版・數字簡譜',
+    price: 80,
+    file: 'cant-help-simple.pdf',
+  },
+  'cant-help-medium': {
+    id: 'cant-help-medium',
+    title: "Can't Help Falling in Love（中等華麗版）",
+    subtitle: '貓王 Elvis Presley・鋼琴改編',
+    price: 100,
+    file: 'cant-help-medium.pdf',
+  },
 };
 
 export function getItem(id) {
